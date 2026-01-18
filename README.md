@@ -1,82 +1,86 @@
-# Scooter Sharing System
+# DesktopCheckers  
+**Distributed Desktop Checkers Application with Remote Persistence**
 
-[![version](https://img.shields.io/badge/version-1.0-green)](https://img.shields.io/badge/version-1.0-green)
+![Kotlin](https://img.shields.io/badge/Kotlin-JVM-blue)
+![Compose Desktop](https://img.shields.io/badge/Compose-Desktop-green)
+![MongoDB](https://img.shields.io/badge/MongoDB-Remote%20Persistence-brightgreen)
+![Architecture](https://img.shields.io/badge/Architecture-MVVM-lightgrey)
 
-## Introduction to Information Systems - ISEL-DEETC
-
-This repository contains the implementation of a Scooter Sharing System, developed as didactic material to support the Introduction to Information Systems course.
+---
 
 ## Overview
 
-This project implements a basic scooter sharing system. 
-## Project Structure
+DesktopCheckers is a distributed desktop application developed using **Kotlin** and **Compose Desktop**.  
+It enables two players, running on separate machines, to play a game of Checkers by sharing a remotely persisted game state stored in **MongoDB**.
 
-The code is organized into several core classes:
+The project was developed for the **Software Development Techniques (TDS)** course, following architectural patterns and design principles commonly adopted in professional and enterprise software systems.
 
-- **Scooter**: Base class containing attributes matching the SCOOTER table
-- **ScooterModel**: Extension for scooters model
-- **Person**: Base class containing attributes matching the PERSON table
-- **User**: Extension for users (CLIENT table)
-- **Card**: Base class containing attributes matching the CARD and TYPEOF tables
-- **Model**: Core class containing application methods
-- **Restriction**: Handles data model constraints and validation
+---
 
-## Important Notes
+## Objectives
 
+- Provide a graphical, mouse-driven Checkers game
+- Enable distributed play between two remote clients
+- Persist game state remotely and consistently
+- Apply clean architectural separation
+- Demonstrate scalable and maintainable software design
 
+---
 
-1. **Class Purposes**
-   - Scooter classes (Scooter, ScooterModel) map to database tables
-   - Person classes (Person, User, Card) map to database tables
-   - Model class implements all application logic
-   - Restriction class manages data integrity and validation
+## Functional Features
 
-2. **Database Configuration**
-   - Database connection settings must be configured in the designated file (see below)
-   - Required settings:
-     - Database Name
-     - Database User
-     - Password
+- Interactive checkers board with row and column identification
+- Mouse-based move execution (select piece → select target)
+- Game status bar displaying:
+  - Game name
+  - Current player
+  - Active turn
+- Game menu:
+  - Start / Join Game
+  - Refresh game state
+  - Exit and cleanup
+- Options menu:
+  - Show possible target moves
+  - Enable or disable automatic refresh
+- Automatic background refresh while waiting for the opponent
+- Safe handling of invalid moves and turn enforcement
+- Remote persistence of game state using MongoDB
 
-## Setup Instructions
+---
 
-1. Clone the repository
-2. Configure database connection settings
-3. Compile the project
-4. Run the application
+## User Interaction Flow
 
-## Database Configuration
+1. Click on a piece to select it
+2. Click on a destination cell to perform the move
+3. Illegal moves are rejected at the domain layer
+4. UI updates automatically based on state changes
 
-Update the following settings in your connection configuration:
+This interaction model follows standard UX patterns used in professional desktop applications.
 
-```java
-db.url = "jdbc:postgresql://[IP_ADDRESS]:[PORT]/[DATABASE]";
-db.user = "[USERNAME]";
-db.password = "[PASSWORD]";
-```
+---
 
-Use the file `database.properties` to change the values.
+## Architecture
 
-## License
+The application follows a **layered MVVM architecture**:
 
-[![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://choosealicense.com/licenses/mit/)
-![maintained](https://img.shields.io/badge/Maintained%3F-yes-green.svg)
+## Distributed Behavior
 
-[![Linux](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
-[![macOS](https://img.shields.io/badge/mac%20os-000000?style=for-the-badge&logo=apple&logoColor=white)](https://img.shields.io/badge/mac%20os-000000?style=for-the-badge&logo=apple&logoColor=white)
-[![docker](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
+- Game state is stored centrally in MongoDB
+- Multiple clients synchronize through refresh operations
+- Auto-refresh polls the database while waiting for the opponent
+- Safe handling of concurrent reads and updates
+- Game is deleted when a player exits to prevent stale state
 
-MIT License
+## Technology Stack
 
-Copyright (c) 2024, Matilde Pato, ISEL-DEETC
+- Kotlin (JVM)
+- Compose Desktop
+- MongoDB
+- Kotlin Coroutines
+- MVVM Architectural Pattern
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+## Testing & Validation
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
+- Domain constraints enforce valid game states
+- Invalid moves and illegal actions are rejected centrally
+- UI reacts safely to all error conditions
